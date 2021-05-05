@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block title %}cfg{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="bin-list">
+    <h3> = file list = </h3>
+    {% for filename in filelist %}
+    <a href={{ url_for('cfgview')+'?file='+filename }}>{{ filename }}</a><br>
+    {% endfor %}
+</div>
+<br>
+{% if target %}
+    <div class="cfg">
+        <b>target: {{ target }}</b><br>
+        {% for line in cfg.split("\n") %}
+            {{ line }}<br>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

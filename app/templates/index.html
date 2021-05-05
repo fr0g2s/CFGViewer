@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block title %}index{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="index">
+    <h2>메뉴얼</h2>
+    <ul>
+        <li>main: 메인 페이지</li>
+        <li>uplaod: 바이너리 업로드</li>
+        <li>cfg   : 업로드한 바이너리 main 함수의 CFG (disassemble)</li>
+    </ul>
+</div>
+{% endblock %}

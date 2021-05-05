@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}binary upload{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="uplaod-form">
+    <form method="POST" action="upload" enctype="multipart/form-data">
+        <div>
+            target: <input type="file" name="file"/>
+            <input type="submit"/>
+        </div>
+    </form>
+    {% for message in get_flashed_messages() %}
+        <div class=flash> {{ message }} </div>
+    {% endfor %}
+    {% if error %}
+        <div class=error>Error: {{ error }}</div>
+    {% endif %}
+</div>
+{% endblock %}
