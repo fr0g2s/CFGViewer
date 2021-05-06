@@ -1,11 +1,11 @@
-a {
-    color: #377Ba8; 
-    text-decoration: none;
-}
+a { color: #377Ba8; text-decoration: none; }
+ul { list-style-type:none; margin:0; }
 
 .proj { font-weight: bold; }
 .main { padding: 0.5em; }
 .flash { background: #CEE5F5; padding: 0.5em; border: 1px solid #AACBE2; }
 .error { background: #F0D6D6; padding: 0.5em; }
 .list { border: 5px solid black; }
-.cfg { padding: 0.5em; border: 2px solid black; padding-left: 200px;}
+.disassemble { padding: 0.5em; border-left: 2px solid black; padding-left: 20px;}
+.func-list { padding: 0.5em; borde-right: 2px solid black; padding-left: 20px; }
+.cfg { padding: 0.5em; }

@@ -8,16 +8,27 @@
 <div class="bin-list">
     <h3> = file list = </h3>
     {% for filename in filelist %}
-    <a href={{ url_for('cfgview')+'?file='+filename }}>{{ filename }}</a><br>
+    <a href={{ url_for('cfgview')+'?file='+filename+'&func=main'}}>{{ filename }}</a><br>
     {% endfor %}
 </div>
 <br>
 {% if target %}
-    <div class="cfg">
-        <b>target: {{ target }}</b><br>
-        {% for line in cfg.split("\n") %}
-            {{ line }}<br>
-        {% endfor %}
-    </div>
+<b>target: {{ target }}</b><br>
+<ul class="cfg">
+    <li style="float: left"> 
+        <div class="func-list">
+            {% for addr,func in funcdict.items() %}
+                <a href={{ url_for('cfgview')+'?file='+target+'&func='+func }}>{{ addr }} {{ func }}</a> <br>
+            {% endfor %}
+        </div>
+    </li>
+    <li style="float: left">
+        <div class="disassemble">
+            {% for line in cfg.split("\n") %}
+                {{ line }}<br>
+            {% endfor %}
+        </div>
+    </li>
+</ul>
 {% endif %}
 {% endblock %}

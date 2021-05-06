@@ -43,9 +43,14 @@ def cfgview():
     if file is None:    # file이 없는 경우, 업로드된 파일 리스트만 보여줌.
         return render_template('cfgview.html', filelist=filelist, target=None, cfg=None)
     else:   # get 요청 받은 file의 main 함수 cfg를 보여줌.
-        g.cfg = get_cfg(file)
+        func = request.args.get("func")
+        if func == None:
+            func = "main"
+        g.r = get_r2pipe(file)
+        cfg = get_cfg(g.r, func)
+        funcdict = get_funcdict(g.r)
 
-        return render_template('cfgview.html', filelist=filelist, target=file, cfg=g.cfg)
+        return render_template('cfgview.html', filelist=filelist, target=file, cfg=cfg, funcdict=funcdict)
 
 if __name__ == "__main__":
     app.debug = True
