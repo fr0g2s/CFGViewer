@@ -8,3 +8,4 @@ a {
 .flash { background: #CEE5F5; padding: 0.5em; border: 1px solid #AACBE2; }
 .error { background: #F0D6D6; padding: 0.5em; }
 .list { border: 5px solid black; }
+.cfg { padding: 0.5em; border: 2px solid black; padding-left: 200px;}

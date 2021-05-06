@@ -19,9 +19,7 @@ def upload():
     if request.method == 'POST':
         g.file = request.files['file']
         file = g.file
-        
         filename = os.path.join(Config.UPLOAD_DIR, secure_filename(file.filename))
-        print('[debug] save file: ', filename)
         file.save(filename)    
         
         g.filetype = getFileType(filename)
@@ -45,9 +43,9 @@ def cfgview():
     if file is None:    # file이 없는 경우, 업로드된 파일 리스트만 보여줌.
         return render_template('cfgview.html', filelist=filelist, target=None, cfg=None)
     else:   # get 요청 받은 file의 main 함수 cfg를 보여줌.
-        cfg = get_cfg(file)
+        g.cfg = get_cfg(file)
 
-        return render_template('cfgview.html', filelist=filelist, target=file, cfg=cfg)
+        return render_template('cfgview.html', filelist=filelist, target=file, cfg=g.cfg)
 
 if __name__ == "__main__":
     app.debug = True

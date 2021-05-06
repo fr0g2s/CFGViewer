@@ -23,9 +23,9 @@ def getFileType(filename):
 
 def get_cfg(filename):  # full path
     filepath = os.path.join(Config.UPLOAD_DIR, filename)
-    print('[debug] filepath: ',filepath)
     r = r2pipe.open(filepath)
     r.cmd('aaa')
     cfg = r.cmd('pdf @main')
+    print(r.cmd('VV'))
 
     return cfg
