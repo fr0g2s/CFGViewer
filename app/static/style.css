@@ -7,5 +7,5 @@ ul { list-style-type:none; margin:0; }
 .error { background: #F0D6D6; padding: 0.5em; }
 .list { border: 5px solid black; }
 .disassemble { padding: 0.5em; border-left: 2px solid black; padding-left: 20px;}
-.func-list { padding: 0.5em; borde-right: 2px solid black; padding-left: 20px; }
+.func-list { padding: 0.5em; border-right: 2px solid black; padding-left: 20px; }
 .cfg { padding: 0.5em; }
