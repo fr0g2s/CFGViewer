@@ -6,6 +6,7 @@ ul { list-style-type:none; margin:0; }
 .flash { background: #CEE5F5; padding: 0.5em; border: 1px solid #AACBE2; }
 .error { background: #F0D6D6; padding: 0.5em; }
 .list { border: 5px solid black; }
-.disassemble { padding: 0.5em; border-left: 2px solid black; padding-left: 20px;}
-.func-list { padding: 0.5em; border-right: 2px solid black; padding-left: 20px; }
+.disassemble { padding: 0.5em; border-top: 2px solid black; padding-left: 20px;}
+.func-list { padding: 0.5em; padding-left: 20px; }
 .cfg { padding: 0.5em; }
+.bb { padding: 0.5em; border: 1px #2dbd75;}

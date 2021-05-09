@@ -22,7 +22,7 @@ def upload():
         filename = os.path.join(Config.UPLOAD_DIR, secure_filename(file.filename))
         file.save(filename)    
         
-        g.filetype = getFileType(filename)
+        g.filetype = get_filetype(filename)
         
         if g.filetype == None:
             error = 'not surpported type. ( give me ELF or PE )'
@@ -49,13 +49,11 @@ def cfgview():
         g.r = get_r2pipe(file)
         cfg = get_cfg(g.r, func)
         funcdict = get_funcdict(g.r)
-
+        cfg = get_separatedcfg(cfg)
         return render_template('cfgview.html', filelist=filelist, target=file, cfg=cfg, funcdict=funcdict)
 
 if __name__ == "__main__":
     app.debug = True
     app.config.from_object(Config)
     
-    app.jinja_env.globals.update(get_filelist=get_filelist)
-
     app.run(host='0.0.0.0', port=1337)

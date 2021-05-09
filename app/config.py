@@ -8,5 +8,7 @@ class Config:
     UPLOAD_DIR = os.path.join(base_dir, "binary")
     os.makedirs(UPLOAD_DIR, exist_ok=True)
 
+HELPER_DEBUG = False
+        
 
 key = Config.SECRET_KEY

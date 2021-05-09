@@ -15,17 +15,22 @@
 {% if target %}
 <b>target: {{ target }}</b><br>
 <ul class="cfg">
-    <li style="float: left"> 
+    <li style="float: bottom"> 
         <div class="func-list">
             {% for addr,func in funcdict.items() %}
                 <a href={{ url_for('cfgview')+'?file='+target+'&func='+func }}>{{ addr }} {{ func }}</a> <br>
             {% endfor %}
         </div>
     </li>
-    <li style="float: left">
-        <div class="disassemble">
-            {% for line in cfg.split("\n") %}
-                {{ line }}<br>
+    <li style="float: bottom">
+            {% for bb in cfg %}
+            <pre><code class="html">
+                <div class="bb">
+                    {% for line in bb.split('\r\n') %}
+                        {{ line }}</br>
+                    {% endfor %}
+                </div>    
+            </code></pre>
             {% endfor %}
         </div>
     </li>
