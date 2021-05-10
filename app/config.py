@@ -8,7 +8,9 @@ class Config:
     UPLOAD_DIR = os.path.join(base_dir, "binary")
     os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-HELPER_DEBUG = False
+# 디버깅 할 때 마다 True/False 고치는거 귀찮다. False에 주석만 추가/삭제 하자.
+HELPER_DEBUG = True
+#HELPER_DEBUG = False
         
 
 key = Config.SECRET_KEY

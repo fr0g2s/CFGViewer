@@ -49,7 +49,6 @@ def cfgview():
         g.r = get_r2pipe(file)
         cfg = get_cfg(g.r, func)
         funcdict = get_funcdict(g.r)
-        cfg = get_separatedcfg(cfg)
         return render_template('cfgview.html', filelist=filelist, target=file, cfg=cfg, funcdict=funcdict)
 
 if __name__ == "__main__":

@@ -39,18 +39,22 @@ def get_r2pipe(filename):
     r.cmd('aaa')
     return r
 
+def is_not_blank(s):
+    return True if s != '' else False
+
 def get_cfg(r, func):
     """
-        get bb list
+        bb list -> separated bb list -> cfg
+        return cfg
     """
     if HELPER_DEBUG:
         print('[debug] get_cfg')
     cfg = []
 
-    bb_list = get_bblist(r, func)   # get start address of bb
+    bb_list = filter(is_not_blank, get_bblist(r, func))   # get start address of bb
     for addr in bb_list:
-        if addr is '':
-            continue
+        bb = get_bb(r, addr)
+        separated_bblist = get_separatedbblist(bb)
         cfg.append(get_bb(r, addr))
     return cfg
 
@@ -117,18 +121,28 @@ def get_funcdict(r):
     return funcdict
 
 
-def get_separatedcfg(cfg):
+def get_separatedbblist(bb):
     """
-    디스어셈블한 내용을 "주소|기계어|opcode|operand" 포맷으로 나눈다.
+    bb를 "addr|bincode|opcode|operand" 포맷으로 나눈다.
+    ['addr'] = 코드 주소
+    ['bincode'] = 기계어
+    ['opcode'] = 연산자
+    ['operand'] = 피연산자
     """
     if HELPER_DEBUG:
         print('[debug] get_separatedcfg')
-    class formatted_cfg:
-        addr = ""
-        bincode = ""
-        opcode = ""
-        operand = ""
     
-    new_cfg = []
-    
-    return cfg
+    separated_bblist = []    
+    separated_bb = {}
+    for line in filter(is_not_blank, ''.join(bb).split('\r\n')):
+        line = line.split()
+        if not line[1].startswith('0x'):
+            continue
+        separated_bb['addr'] = line[1]
+        separated_bb['bincode'] = line[2]
+        separated_bb['opcode'] = line[3]
+        separated_bb['operand'] = ' '.join(line[4:])
+        print(separated_bb)
+        separated_bblist.append(separated_bb)
+        
+    return separated_bblist
