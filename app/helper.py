@@ -54,10 +54,32 @@ def get_cfg(r, func):
     bb_list = filter(is_not_blank, get_bblist(r, func))   # get start address of bb
     for addr in bb_list:
         bb = get_bb(r, addr)
-        separated_bblist = get_separatedbblist(bb)
-        cfg.append(get_bb(r, addr))
+        # list에 dict 자료를 추가하면 이전에 있던 내용이 새로 추가될 데이터로 바뀜. 덮어 써지는건지 모르겠음.
+        #separated_bblist = get_separatedbblist(bb)  # {addr| bincode| opcode| operand}
+        #orginized_bb = get_orginizedbb(separated_bblist)    # "addr bincode opcode operand"
+        parsed_bb = get_parsedbb(bb)
+        cfg.append(parsed_bb)
     return cfg
 
+def get_parsedbb(bb):
+    """
+        "addr bincode opcode operand\\n" 문자열을 리턴한다
+    """
+    parsed_bb = ""
+    for line in filter(is_not_blank, ''.join(bb).split('\r\n')):
+        line = line.split()
+        if not line[1].startswith('0x'):
+            continue
+        parsed_bb += ' '.join(line[1:]) + "\r\n"
+    return parsed_bb
+
+def get_orginizedbb(separated_bblist):
+    orginized_bb = ""
+    for e in separated_bblist:
+        line = "{0} | {1} \t {2} {3} \r\n".format(e['addr'], e['bincode'], e['opcode'], e['operand'])
+        orginized_bb += line
+    return orginized_bb
+        
 def get_bblist(r, func):
     command = 'afb @ `func`'
     f"""
@@ -142,7 +164,8 @@ def get_separatedbblist(bb):
         separated_bb['bincode'] = line[2]
         separated_bb['opcode'] = line[3]
         separated_bb['operand'] = ' '.join(line[4:])
-        print(separated_bb)
+        print('append ', separated_bb)
         separated_bblist.append(separated_bb)
+        print('appended', separated_bblist)
         
     return separated_bblist

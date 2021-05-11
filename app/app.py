@@ -49,7 +49,7 @@ def cfgview():
         g.r = get_r2pipe(file)
         cfg = get_cfg(g.r, func)
         funcdict = get_funcdict(g.r)
-        return render_template('cfgview.html', filelist=filelist, target=file, cfg=cfg, funcdict=funcdict)
+        return render_template('cfgview.html', filelist=filelist, target=file, func=func, cfg=cfg, funcdict=funcdict)
 
 if __name__ == "__main__":
     app.debug = True
