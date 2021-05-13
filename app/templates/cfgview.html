@@ -2,6 +2,7 @@
 {% block title %}cfg{% endblock %}
 {% block head %}
     {{ super() }}
+    <script src="{{ url_for('static', filename='cfgview.js')}}"></script>
 {% endblock %}
 
 {% block content %}
@@ -29,13 +30,16 @@
     <div>
         <li style="float: bottom">
             {% for bb in cfg %}
-            <code class="x86asm">
-                    <div class="bb">
-                        {% for line in bb.split('\r\n') %}
+            <pre>
+                <code class="x86asm">
+                    <div class="bb" id="{{ bb['idx'] }}">
+                        {% for line in bb['content'].split('\r\n') %}
                             {{ line }}<br>
                         {% endfor %}  
                     </div>
-            </code><br><br>
+                </code>
+            </pre>
+            <br><br>
             {% endfor %}
         </li>
     </div>

@@ -52,13 +52,15 @@ def get_cfg(r, func):
     cfg = []
 
     bb_list = filter(is_not_blank, get_bblist(r, func))   # get start address of bb
+    count = 0
     for addr in bb_list:
         bb = get_bb(r, addr)
         # list에 dict 자료를 추가하면 이전에 있던 내용이 새로 추가될 데이터로 바뀜. 덮어 써지는건지 모르겠음.
         #separated_bblist = get_separatedbblist(bb)  # {addr| bincode| opcode| operand}
         #orginized_bb = get_orginizedbb(separated_bblist)    # "addr bincode opcode operand"
         parsed_bb = get_parsedbb(bb)
-        cfg.append(parsed_bb)
+        cfg.append({'idx':count, 'content':parsed_bb})
+        count += 1
     return cfg
 
 def get_parsedbb(bb):
@@ -70,16 +72,13 @@ def get_parsedbb(bb):
         line = line.split()
         if not line[1].startswith('0x'):
             continue
-        parsed_bb += ' '.join(line[1:]) + "\r\n"
+        opcode = ' '.join(line[4:])
+        opcode_end = opcode.find(';')
+        if opcode_end == -1:
+            opcode_end = None
+        parsed_bb += "{0} | {2} {3}".format(line[1], line[2], line[3], opcode[:opcode_end]) + "\r\n"    # 기계어 추가하면 공백이 안맞음.
     return parsed_bb
-
-def get_orginizedbb(separated_bblist):
-    orginized_bb = ""
-    for e in separated_bblist:
-        line = "{0} | {1} \t {2} {3} \r\n".format(e['addr'], e['bincode'], e['opcode'], e['operand'])
-        orginized_bb += line
-    return orginized_bb
-        
+    
 def get_bblist(r, func):
     command = 'afb @ `func`'
     f"""
@@ -115,7 +114,6 @@ def get_bb(r, addr):
         print('[debug] get_cfg')
     bb = r.cmd(command.replace("`addr`",addr))
     return bb
-
 
 def get_funcdict(r):
     """
@@ -169,3 +167,10 @@ def get_separatedbblist(bb):
         print('appended', separated_bblist)
         
     return separated_bblist
+
+def get_orginizedbb(separated_bblist):
+    orginized_bb = ""
+    for e in separated_bblist:
+        line = "{0} | {1} \t {2} {3} \r\n".format(e['addr'], ' '.join(e['bincode']), e['opcode'], e['operand'])
+        orginized_bb += line
+    return orginized_bb
