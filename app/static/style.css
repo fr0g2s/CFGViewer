@@ -8,7 +8,7 @@ ul { list-style-type:none; margin:0; }
 .list { border: 5px solid black; }
 .disassemble { padding: 0.5em; border-top: 2px solid black; padding-left: 20px;}
 .func-list { padding: 0.5em; padding-left: 20px; }
-.cfg { padding: 0.5em; }
-.bb { border: 2px solid; border-color: #8da5e0; box-sizing: content-box;}
+.cfg { padding: 0.5em;}
+.bb { border: 2px solid; border-color: #8da5e0;  }
 .bb_false { border: 3px solid; border-color: #d65c47; }
 .bb_true { border: 3px solid; border-color: #6ec275; display: inline-block;}

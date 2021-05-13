@@ -1,1 +1,1 @@
-console.log('cfgview.js')
+console.log('cfgview.js');

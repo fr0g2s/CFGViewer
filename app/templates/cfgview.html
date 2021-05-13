@@ -2,7 +2,13 @@
 {% block title %}cfg{% endblock %}
 {% block head %}
     {{ super() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script>hljs.highlightAll()</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/languages/x86asm.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="{{ url_for('static', filename='cfgview.js')}}"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -19,7 +25,7 @@
 <br>
 {% if target %}
 <b>target: {{ target + '@' + func }}</b>
-<ul class="cfg">
+<ul class="cfg" >
     <li style="float: bottom"> 
         <div class="func-list">
             {% for addr,func in funcdict.items() %}
@@ -28,21 +34,25 @@
         </div>
     </li>
     <div>
-        <li style="float: bottom">
+        <li style="float: bottom;">
             {% for bb in cfg %}
             <pre>
-                <code class="x86asm">
+                <code class="x86asm"  style="width: {{ width[bb['idx']]*8}}px;">
                     <div class="bb" id="{{ bb['idx'] }}">
                         {% for line in bb['content'].split('\r\n') %}
-                            {{ line }}<br>
+    {{ line }}
                         {% endfor %}  
                     </div>
                 </code>
             </pre>
-            <br><br>
             {% endfor %}
         </li>
     </div>
 </ul>
 {% endif %}
+<script>
+    $(document).ready(function(){
+        console.log(document);
+    });
+</script>
 {% endblock %}

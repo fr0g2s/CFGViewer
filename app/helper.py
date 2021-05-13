@@ -50,7 +50,7 @@ def get_cfg(r, func):
     if HELPER_DEBUG:
         print('[debug] get_cfg')
     cfg = []
-
+    width = []
     bb_list = filter(is_not_blank, get_bblist(r, func))   # get start address of bb
     count = 0
     for addr in bb_list:
@@ -58,27 +58,47 @@ def get_cfg(r, func):
         # list에 dict 자료를 추가하면 이전에 있던 내용이 새로 추가될 데이터로 바뀜. 덮어 써지는건지 모르겠음.
         #separated_bblist = get_separatedbblist(bb)  # {addr| bincode| opcode| operand}
         #orginized_bb = get_orginizedbb(separated_bblist)    # "addr bincode opcode operand"
-        parsed_bb = get_parsedbb(bb)
+        parsed_bb, max_len = get_parsedbb(bb)
+        if count == 2:
+            print(parsed_bb)
         cfg.append({'idx':count, 'content':parsed_bb})
+        width.append(max_len)
         count += 1
-    return cfg
+    return cfg, width
 
 def get_parsedbb(bb):
     """
         "addr bincode opcode operand\\n" 문자열을 리턴한다
     """
+    if HELPER_DEBUG:
+        print('[debug] get_parsedbb')
     parsed_bb = ""
+    max_len = -1
     for line in filter(is_not_blank, ''.join(bb).split('\r\n')):
         line = line.split()
-        if not line[1].startswith('0x'):
+        st_idx = get_startidx(line)    # 주소가 시작하는 인덱스 
+        if st_idx == -1:    # 해당 라인은 0x"주소" 형태의 필드가 없음. 디스어셈블 내용이 없음.
             continue
         opcode = ' '.join(line[4:])
         opcode_end = opcode.find(';')
         if opcode_end == -1:
             opcode_end = None
-        parsed_bb += "{0} | {2} {3}".format(line[1], line[2], line[3], opcode[:opcode_end]) + "\r\n"    # 기계어 추가하면 공백이 안맞음.
-    return parsed_bb
-    
+        parsed_line = "{0} | {2} {3}".format(line[st_idx], line[st_idx+1], line[st_idx+2], opcode[:opcode_end]) + "\r\n"    # 기계어 추가하면 공백이 안맞음. 
+        parsed_bb += parsed_line
+
+        if max_len < len(parsed_line):
+            max_len = len(parsed_line)
+    return parsed_bb, max_len
+
+def get_startidx(l):
+    if HELPER_DEBUG:
+        print('[debug] get_startidx')
+    for e in l:
+        if e.startswith('0x'):
+            if l.index(e) != len(l)-1:
+                return l.index(e)
+    return -1
+
 def get_bblist(r, func):
     command = 'afb @ `func`'
     f"""
@@ -139,6 +159,8 @@ def get_funcdict(r):
         funcdict[addr] = func_name
             
     return funcdict
+
+
 
 
 def get_separatedbblist(bb):
