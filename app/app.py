@@ -3,7 +3,6 @@ from werkzeug.utils import secure_filename
 from config import *
 from upload_helper import *
 from cfgview_helper import *
-from cfgjson_helper import *
 import os
 import json
 import time # for debugging
@@ -50,9 +49,9 @@ def cfgview():
         func = request.args.get("func")
         if func == None:
             func = "main"
-        g.r = get_r2pipe(file)
-        cfg, width = get_cfg(g.r, func)
-        funcdict = get_funcdict(g.r)
+        r = get_r2pipe(file)
+        cfg, width = get_cfg(r, func)
+        funcdict = get_funcdict(r)
         return render_template('cfgview.html', filelist=filelist, target=file, func=func, cfg=cfg, width=width, funcdict=funcdict)
 
 @app.route("/cfgjson", methods=["GET"])
@@ -60,9 +59,20 @@ def cfgjson():
     r2_command = "pdbj @ `addr`"
     file = request.args.get("file")
     func = request.args.get("func")
-    g.r = get_r2pipe(file, func)
-    bb_json = g.r.cmd(r2_command.replace("`addr`", func))
-    return bb_json
+
+    if file is None:
+        return "no file"
+    else:
+        r = get_r2pipe(file)
+        bb_json = r.cmd(r2_command.replace("`addr`", func))
+        parsed_bbjson = ""
+        parsed_line = {}
+        bb_json = json.loads(bb_json)
+        for line in bb_json:
+            parsed_line['offset'] = hex(line['offset'])
+            parsed_line['disasm'] = line['disasm']
+            parsed_bbjson += json.dumps(parsed_line)
+        return parsed_bbjson
 
 if __name__ == "__main__":
     app.debug = True

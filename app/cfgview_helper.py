@@ -45,7 +45,6 @@ def get_parsedbb(bb):
     max_len = -1
     for line in filter(is_not_blank, ''.join(bb).split('\r\n')):
         line = line.split()
-        print(line)
         st_idx = get_startidx(line)    # 주소가 시작하는 인덱스 
         if st_idx == -1:    # 해당 라인은 0x"주소" 형태의 필드가 없음. 디스어셈블 내용이 없음.
             continue
@@ -60,6 +59,20 @@ def get_parsedbb(bb):
             max_len = len(parsed_line)
     return parsed_bb, max_len
 
+def get_r2pipe(filename):
+    """
+        r = r2pipe.open(filepath)
+        r.cmd('aaa')
+        return r
+    """
+    if HELPER_DEBUG:
+        print('[debug] get_r2pipe')
+    filepath = os.path.join(Config.UPLOAD_DIR, filename)
+    r = r2pipe.open(filepath)
+    print(filepath)
+    r.cmd('aaa')
+    return r
+    
 def get_startidx(l):
     if HELPER_DEBUG:
         print('[debug] get_startidx')

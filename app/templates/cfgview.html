@@ -7,8 +7,7 @@
     <script>hljs.highlightAll()</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/languages/x86asm.min.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script src="{{ url_for('static', filename='cfgview.js')}}"></script>
-
+    <script src="{{ url_for('static', filename='cfgview.js')}}?ver=10"></script>
 {% endblock %}
 
 {% block content %}
@@ -24,7 +23,8 @@
 </div>
 <br>
 {% if target %}
-<b>target: {{ target + '@' + func }}</b>
+target: 
+<b id="target" value="{{ target }}">{{ target }}</b>@<b id="func" value="{{ func }}">{{ func }}</b>
 <ul class="cfg" >
     <li style="float: bottom"> 
         <div class="func-list">
