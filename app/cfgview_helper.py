@@ -10,35 +10,6 @@ def get_filelist():
     filelist = os.listdir(Config.UPLOAD_DIR+"\\")
     return filelist
 
-def get_filetype(filename):
-    """
-        specifiy file type via file signature
-    """
-    if HELPER_DEBUG:
-        print('[debug] get_filetype')
-    filetype = None
-    with open(filename, 'rb') as f:
-        sign = f.read(4)
-        
-        if b"\x4D\x5A" in sign:
-            filetype = "pe"
-        elif b"\x7f\x45\x4C\x46" in sign:
-            filetype = "elf"
-    return filetype
-
-def get_r2pipe(filename):
-    """
-        r = r2pipe.open(filepath)
-        r.cmd('aaa')
-        return r
-    """
-    if HELPER_DEBUG:
-        print('[debug] get_r2pipe')
-    filepath = os.path.join(Config.UPLOAD_DIR, filename)
-    r = r2pipe.open(filepath)
-    r.cmd('aaa')
-    return r
-
 def is_not_blank(s):
     return True if s != '' else False
 
@@ -59,8 +30,6 @@ def get_cfg(r, func):
         #separated_bblist = get_separatedbblist(bb)  # {addr| bincode| opcode| operand}
         #orginized_bb = get_orginizedbb(separated_bblist)    # "addr bincode opcode operand"
         parsed_bb, max_len = get_parsedbb(bb)
-        if count == 2:
-            print(parsed_bb)
         cfg.append({'idx':count, 'content':parsed_bb})
         width.append(max_len)
         count += 1
@@ -76,6 +45,7 @@ def get_parsedbb(bb):
     max_len = -1
     for line in filter(is_not_blank, ''.join(bb).split('\r\n')):
         line = line.split()
+        print(line)
         st_idx = get_startidx(line)    # 주소가 시작하는 인덱스 
         if st_idx == -1:    # 해당 라인은 0x"주소" 형태의 필드가 없음. 디스어셈블 내용이 없음.
             continue
@@ -83,7 +53,7 @@ def get_parsedbb(bb):
         opcode_end = opcode.find(';')
         if opcode_end == -1:
             opcode_end = None
-        parsed_line = "{0} | {2} {3}".format(line[st_idx], line[st_idx+1], line[st_idx+2], opcode[:opcode_end]) + "\r\n"    # 기계어 추가하면 공백이 안맞음. 
+        parsed_line = "{0} | {1} {2} {3}".format(line[st_idx], line[st_idx+1], line[st_idx+2], opcode[st_idx+2:opcode_end]) + "\r\n"    # 기계어 추가하면 공백이 안맞음. 
         parsed_bb += parsed_line
 
         if max_len < len(parsed_line):
@@ -97,19 +67,21 @@ def get_startidx(l):
         if e.startswith('0x'):
             if l.index(e) != len(l)-1:
                 return l.index(e)
+        if e.startswith(';'):   # 0x가 나오기 전에 ;가 나오면 코드가 아니다.
+            return -1
     return -1
 
 def get_bblist(r, func):
-    command = 'afb @ `func`'
+    r2_command = 'afb @ `func`'
     f"""
         r.cmd(%s)
         get start address of bb
-    """ % command
+    """ % r2_command
     
     if HELPER_DEBUG:
         print('[debug] get_bblist')
     bb_list = []
-    bb_infolist = r.cmd(command.replace('`func`', func)).split('\r\n')
+    bb_infolist = r.cmd(r2_command.replace('`func`', func)).split('\r\n')
     for bb_info in bb_infolist:
         bb_info = bb_info.split(' ')
         try:
@@ -125,14 +97,14 @@ def get_bblist(r, func):
     return bb_list
 
 def get_bb(r, addr):
-    command = 'pdb @ `addr`'
+    r2_command = 'pdb @ `addr`'
     f"""
         r.cmd(%s)
-    """ % command
+    """ % r2_command
     
     if HELPER_DEBUG:
         print('[debug] get_cfg')
-    bb = r.cmd(command.replace("`addr`",addr))
+    bb = r.cmd(r2_command.replace("`addr`",addr))
     return bb
 
 def get_funcdict(r):

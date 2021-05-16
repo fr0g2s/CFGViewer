@@ -38,7 +38,7 @@
             {% for bb in cfg %}
             <pre>
                 <code class="x86asm"  style="width: {{ width[bb['idx']]*8}}px;">
-                    <div class="bb" id="{{ bb['idx'] }}">
+                    <div id="bb" class="bb" id="{{ bb['idx'] }}">
                         {% for line in bb['content'].split('\r\n') %}
     {{ line }}
                         {% endfor %}  
@@ -50,9 +50,4 @@
     </div>
 </ul>
 {% endif %}
-<script>
-    $(document).ready(function(){
-        console.log(document);
-    });
-</script>
 {% endblock %}

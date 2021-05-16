@@ -1,8 +1,11 @@
 from flask import Flask, request, url_for, render_template, flash, session, g
 from werkzeug.utils import secure_filename
 from config import *
-from helper import *
+from upload_helper import *
+from cfgview_helper import *
+from cfgjson_helper import *
 import os
+import json
 import time # for debugging
 
 app = Flask(__name__)
@@ -43,6 +46,7 @@ def cfgview():
     if file is None:    # file이 없는 경우, 업로드된 파일 리스트만 보여줌.
         return render_template('cfgview.html', filelist=filelist, target=None, cfg=None)
     else:   # get 요청 받은 file의 main 함수 cfg를 보여줌.
+        g.file = file
         func = request.args.get("func")
         if func == None:
             func = "main"
@@ -50,6 +54,15 @@ def cfgview():
         cfg, width = get_cfg(g.r, func)
         funcdict = get_funcdict(g.r)
         return render_template('cfgview.html', filelist=filelist, target=file, func=func, cfg=cfg, width=width, funcdict=funcdict)
+
+@app.route("/cfgjson", methods=["GET"])
+def cfgjson():
+    r2_command = "pdbj @ `addr`"
+    file = request.args.get("file")
+    func = request.args.get("func")
+    g.r = get_r2pipe(file, func)
+    bb_json = g.r.cmd(r2_command.replace("`addr`", func))
+    return bb_json
 
 if __name__ == "__main__":
     app.debug = True
