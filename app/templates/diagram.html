@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block title %}diagram{% endblock %}
+{% block head %}
+    {{ super() }}
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+{% endblock %}
+
+{% block content %}
+Here is a mermaid diagram:
+<div class="mermaid">
+    graph TD
+    A[a] --> B[Load Balancer]
+    B --> C[Server01]
+    B --> D[Server02]
+</div>
+{% endblock %}

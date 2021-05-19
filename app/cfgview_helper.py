@@ -1,4 +1,3 @@
-from flask import url_for
 from config import *
 import os
 import r2pipe
@@ -69,7 +68,6 @@ def get_r2pipe(filename):
         print('[debug] get_r2pipe')
     filepath = os.path.join(Config.UPLOAD_DIR, filename)
     r = r2pipe.open(filepath)
-    print(filepath)
     r.cmd('aaa')
     return r
     

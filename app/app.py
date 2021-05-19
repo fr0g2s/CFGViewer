@@ -1,8 +1,9 @@
-from flask import Flask, request, url_for, render_template, flash, session, g
+from flask import Flask, request, url_for, render_template, flash, session, g, jsonify
 from werkzeug.utils import secure_filename
 from config import *
 from upload_helper import *
 from cfgview_helper import *
+from cfgjson_helper import *
 import os
 import json
 import time # for debugging
@@ -56,7 +57,6 @@ def cfgview():
 
 @app.route("/cfgjson", methods=["GET"])
 def cfgjson():
-    r2_command = "pdbj @ `addr`"
     file = request.args.get("file")
     func = request.args.get("func")
 
@@ -64,15 +64,13 @@ def cfgjson():
         return "no file"
     else:
         r = get_r2pipe(file)
-        bb_json = r.cmd(r2_command.replace("`addr`", func))
-        parsed_bbjson = ""
-        parsed_line = {}
-        bb_json = json.loads(bb_json)
-        for line in bb_json:
-            parsed_line['offset'] = hex(line['offset'])
-            parsed_line['disasm'] = line['disasm']
-            parsed_bbjson += json.dumps(parsed_line)
-        return parsed_bbjson
+        cfg_json = get_cfgjson(r, func)
+        return jsonify(cfg_json)
+
+@app.route("/diagram")
+def diagram():
+    # mermaid test page
+    return render_template('diagram.html')
 
 if __name__ == "__main__":
     app.debug = True
