@@ -46,7 +46,6 @@ def cfgview():
     if file is None:    # file이 없는 경우, 업로드된 파일 리스트만 보여줌.
         return render_template('cfgview.html', filelist=filelist, target=None, cfg=None)
     else:   # get 요청 받은 file의 main 함수 cfg를 보여줌.
-        g.file = file
         func = request.args.get("func")
         if func == None:
             func = "main"
@@ -54,6 +53,23 @@ def cfgview():
         cfg, width = get_cfg(r, func)
         funcdict = get_funcdict(r)
         return render_template('cfgview.html', filelist=filelist, target=file, func=func, cfg=cfg, width=width, funcdict=funcdict)
+
+@app.route("/diagram", methods=["GET"])
+def diagram():
+    # mermaid test page
+    file = request.args.get("file")
+    filelist = get_filelist()
+
+    if file is None:
+        return render_template('cfgview.html', filelist=filelist, target=None, cfg=None)
+    else:
+        func = request.args.get('func')
+        if func == None:
+            func = 'main'
+        r = get_r2pipe(file)
+        cfg, width = get_cfg(r, func)
+        print(cfg)
+        return render_template('diagram.html', target=file, cfg=cfg)
 
 @app.route("/cfgjson", methods=["GET"])
 def cfgjson():
@@ -67,10 +83,6 @@ def cfgjson():
         cfg_json = get_cfgjson(r, func)
         return jsonify(cfg_json)
 
-@app.route("/diagram")
-def diagram():
-    # mermaid test page
-    return render_template('diagram.html')
 
 if __name__ == "__main__":
     app.debug = True

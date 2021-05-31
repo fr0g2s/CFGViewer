@@ -7,10 +7,21 @@
 
 {% block content %}
 Here is a mermaid diagram:
+target: {{ target }}
 <div class="mermaid">
     graph TD
-    A[a] --> B[Load Balancer]
-    B --> C[Server01]
-    B --> D[Server02]
+    {% if target %}
+    {% for bb in cfg %}
+       {{ bb['idx'] }}
+        [
+            {% for line in bb['content'].split('\r\n') %}
+                {{ "line" }}<br/> 
+            {% endfor %}
+        ] --> {{ bb['idx']+1 }}[test]
+    {% endfor %}
+    {% endif %}
+</div>
+<div class="mermaid">
+    graph TD
 </div>
 {% endblock %}
