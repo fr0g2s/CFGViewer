@@ -47,11 +47,11 @@ def get_parsedbb(bb):
         st_idx = get_startidx(line)    # 주소가 시작하는 인덱스 
         if st_idx == -1:    # 해당 라인은 0x"주소" 형태의 필드가 없음. 디스어셈블 내용이 없음.
             continue
-        opcode = ' '.join(line[4:])
+        opcode = ' '.join(line[3:])
         opcode_end = opcode.find(';')
         if opcode_end == -1:
             opcode_end = None
-        parsed_line = "{0} | {1} {2} {3}".format(line[st_idx], line[st_idx+1], line[st_idx+2], opcode[st_idx+2:opcode_end]) + "\r\n"    # 기계어 추가하면 공백이 안맞음. 
+        parsed_line = "{0} : {1} {2} {3}".format(line[st_idx], line[st_idx+1], line[st_idx+2], opcode[st_idx+2:opcode_end]) + "\r\n"    # 기계어 추가하면 공백이 안맞음. 
         parsed_bb += parsed_line
 
         if max_len < len(parsed_line):

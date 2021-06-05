@@ -61,14 +61,16 @@ def diagram():
     filelist = get_filelist()
 
     if file is None:
-        return render_template('cfgview.html', filelist=filelist, target=None, cfg=None)
+        return render_template('diagram.html', filelist=filelist, target=None, cfg=None)
     else:
         func = request.args.get('func')
         if func == None:
             func = 'main'
         r = get_r2pipe(file)
         cfg, width = get_cfg(r, func)
-        print(cfg)
+        for bb in cfg:
+            print(bb['content'])
+            
         return render_template('diagram.html', target=file, cfg=cfg)
 
 @app.route("/cfgjson", methods=["GET"])

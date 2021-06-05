@@ -6,22 +6,27 @@
 {% endblock %}
 
 {% block content %}
+<div class="bin-list">
+    <h3> = file list = </h3>
+    {% for filename in filelist %}
+    {% if target == filename %}
+        <b><a href={{ url_for('diagram')+'?file='+filename+'&func=main'}}>{{ filename }}</a></b><br>
+    {% else %}
+        <a href={{ url_for('diagram')+'?file='+filename+'&func=main'}}>{{ filename }}</a><br>
+    {% endif %}
+    {% endfor %}
+</div>
+<br>
+{% if target %}
 Here is a mermaid diagram:
 target: {{ target }}
+
 <div class="mermaid">
     graph TD
-    {% if target %}
     {% for bb in cfg %}
-       {{ bb['idx'] }}
-        [
-            {% for line in bb['content'].split('\r\n') %}
-                {{ "line" }}<br/> 
-            {% endfor %}
-        ] --> {{ bb['idx']+1 }}[test]
+        {{ bb['idx'] }}[ `{{ bb['content'] }}` ] --> {{ bb['idx']+1 }}[test]
     {% endfor %}
-    {% endif %}
 </div>
-<div class="mermaid">
-    graph TD
-</div>
+
+{% endif %}
 {% endblock %}
